@@ -1,0 +1,4 @@
+{"reviews":[
+ {"id":"aaa111","stars":4,"title":"Good value","text":"Cheap and easy.","createdAt":"2026-10-11T10:00:00Z","consumer":{"displayName":"Sam","countryCode":"US"}},
+ {"id":"bbb222","stars":1,"title":"","text":"Never activated.","createdAt":"2026-10-09T10:00:00Z","consumer":{"displayName":""}}
+],"links":[]}

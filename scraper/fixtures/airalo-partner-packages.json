@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "slug": "united-states",
+      "country_code": "US",
+      "title": "United States",
+      "operators": [
+        {
+          "id": 101,
+          "title": "Change",
+          "type": "local",
+          "coverages": [{ "name": "US", "networks": [{ "name": "T-Mobile", "type": "5G" }, { "name": "AT&T", "type": "LTE" }] }],
+          "packages": [
+            { "id": "change-7days-1gb", "type": "sim", "price": 4.5, "amount": 1024, "day": 7, "is_unlimited": false, "title": "1 GB - 7 Days", "data": "1 GB", "voice": null, "text": null, "net_price": 3.6 },
+            { "id": "change-30days-unlimited", "type": "sim", "price": 49, "amount": 0, "day": 30, "is_unlimited": true, "title": "Unlimited - 30 Days", "data": "Unlimited", "voice": 100, "text": 100 },
+            { "id": "change-bad", "type": "sim", "price": 0, "amount": 1024, "day": 7, "title": "broken" }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "eurolink",
+      "country_code": null,
+      "title": "Eurolink",
+      "operators": [
+        {
+          "title": "Eurolink",
+          "countries": [{ "country_code": "FR", "title": "France" }, { "country_code": "DE", "title": "Germany" }, { "country_code": "IT", "title": "Italy" }],
+          "packages": [{ "id": "eurolink-15days-3gb", "price": 13, "amount": 3072, "day": 15, "is_unlimited": false, "title": "3 GB - 15 Days", "data": "3 GB" }]
+        }
+      ]
+    },
+    {
+      "slug": "world",
+      "title": "Discover Global",
+      "operators": [
+        {
+          "title": "Discover",
+          "countries": [{ "country_code": "US" }, { "country_code": "JP" }],
+          "packages": [{ "id": "discover-30days-5gb", "price": 32.5, "amount": 5120, "day": 30, "data": "5 GB" }]
+        }
+      ]
+    }
+  ],
+  "meta": { "current_page": 1, "last_page": 1 }
+}

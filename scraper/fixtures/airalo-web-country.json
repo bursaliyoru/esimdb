@@ -1,0 +1,10 @@
+{
+  "id": 222,
+  "slug": "japan",
+  "country_code": "JP",
+  "title": "Japan",
+  "packages": [
+    { "id": 9001, "slug": "moshi-moshi-7days-1gb", "title": "1 GB - 7 Days", "data": "1 GB", "amount": 1024, "day": 7, "price": 4.5, "is_unlimited": false },
+    { "id": 9002, "slug": "moshi-moshi-10days-2gb-daily", "title": "2 GB/day - 10 Days", "data": "2 GB/day", "amount": 2048, "day": 10, "price": 18, "is_unlimited": false }
+  ]
+}

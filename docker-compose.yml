@@ -1,0 +1,58 @@
+# Production stack: Postgres + website + daily scraper worker + Caddy (automatic HTTPS).
+# Usage: cp .env.example .env  →  fill it in  →  docker compose up -d --build
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: esim
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: esimdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U esim -d esimdb"]
+      interval: 5s
+      retries: 20
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URI: postgres://esim:${POSTGRES_PASSWORD}@db:5432/esimdb
+    depends_on:
+      db: { condition: service_healthy }
+    volumes:
+      - logos:/app/public/logos
+      - media:/app/public/media
+    expose: ["3000"]
+
+  worker:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URI: postgres://esim:${POSTGRES_PASSWORD}@db:5432/esimdb
+    command: ["npm", "run", "worker"]
+    depends_on:
+      web: { condition: service_started }
+    volumes:
+      - logos:/app/public/logos
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy:/data
+    depends_on: [web]
+
+volumes:
+  pgdata:
+  logos:
+  media:
+  caddy:

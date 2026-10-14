@@ -1,0 +1,5 @@
+{"destination":"Germany","currency":"EUR","offers":[
+ {"planId":"de-500mb-30d","label":"500 MB","volume":"500 MB","validity":"30 days","price":"4,00 €","currency":"EUR"},
+ {"planId":"de-3gb-30d","label":"3 GB","volume":"3 GB","validity":"30 days","price":"12,00 €","currency":"EUR","is5G":true},
+ {"planId":"de-daily","label":"1 GB / day","volume":"1 GB/day","validity":"1 month","price":"25,00 €","currency":"EUR"}
+]}

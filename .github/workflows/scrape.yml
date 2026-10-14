@@ -1,0 +1,62 @@
+name: Scrape prices & reviews
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily, 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'prices | trustpilot | logos | all'
+        default: 'all'
+        required: false
+      provider:
+        description: 'Only this provider slug (optional)'
+        required: false
+
+permissions:
+  contents: write # only needed to commit downloaded logos
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run scraper
+        env:
+          # Must be a reachable Postgres URL: the SQLite file is not persisted between runs.
+          DATABASE_URI: ${{ secrets.DATABASE_URI }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          SCRAPER_PROXIES: ${{ secrets.SCRAPER_PROXIES }}
+          TRUSTPILOT_API_KEY: ${{ secrets.TRUSTPILOT_API_KEY }}
+          AIRALO_CLIENT_ID: ${{ secrets.AIRALO_CLIENT_ID }}
+          AIRALO_CLIENT_SECRET: ${{ secrets.AIRALO_CLIENT_SECRET }}
+          TRUSTPILOT_ENABLED: ${{ vars.TRUSTPILOT_ENABLED || 'true' }}
+          # production = Payload does not auto-push schema changes; run migrations on deploy instead.
+          NODE_ENV: production
+          INPUT_JOB: ${{ github.event.inputs.job || 'all' }}
+          INPUT_PROVIDER: ${{ github.event.inputs.provider }}
+        run: |
+          set -- "$INPUT_JOB"
+          if [ -n "$INPUT_PROVIDER" ]; then set -- "$@" --provider "$INPUT_PROVIDER"; fi
+          npm run scrape -- "$@"
+      # Logos are written to public/logos; commit them back so the site can serve them.
+      - name: Commit new logos
+        if: always()
+        run: |
+          if [ -n "$(git status --porcelain public/logos)" ]; then
+            git config user.name "scraper-bot"
+            git config user.email "scraper-bot@users.noreply.github.com"
+            git add public/logos
+            git commit -m "chore: update provider logos"
+            git push
+          fi
